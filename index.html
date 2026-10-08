@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MATRIX | Math &amp; Mechanics Club</title>
+  <meta name="description" content="MATRIX is the Math & Mechanics club for Grade 10 and Grade 11 students. Concept folders, practice worksheets and a team you can message.">
+  <meta name="theme-color" content="#05080d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327e8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4H5v16h3M16 4h3v16h-3'/%3E%3Ccircle cx='12' cy='12' r='1.6' fill='%233df5a8' stroke='none'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#05080d',
+            ink: '#0a121b',
+            neon: '#27e8ff',
+            mint: '#3df5a8',
+            chalk: '#e6f5f3',
+            mist: '#8aa6a6'
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+            body: ['"Instrument Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="font-body antialiased">
+
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-linkedin" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3.5"/><path d="M8 11v6M8 7.5v.01M12 17v-6m0 3a3 3 0 0 1 6 0v3"/></symbol>
+      <symbol id="i-youtube" viewBox="0 0 24 24"><path d="M3 8.5A4.5 4.5 0 0 1 7.5 4h9A4.5 4.5 0 0 1 21 8.5v7a4.5 4.5 0 0 1-4.5 4.5h-9A4.5 4.5 0 0 1 3 15.5z"/><path d="m10 9 5 3-5 3z"/></symbol>
+      <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></symbol>
+      <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2.5 21.5z"/><path d="M9.2 8.8c.1 3 2.4 5.6 5.6 6.1"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/></symbol>
+      <symbol id="i-notes" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M6.5 17H20v4H6.5a2.5 2.5 0 0 1 0-4z"/></symbol>
+      <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+      <symbol id="i-worksheet" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    </defs>
+  </svg>
+
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <a href="#/home" class="brand" aria-label="MATRIX, home">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H5v16h3M16 4h3v16h-3"/><circle cx="12" cy="12" r="1.7" class="brand-dot"/></svg>
+        <span class="brand-word font-display">MATRIX</span>
+      </a>
+
+      <nav class="hidden md:block" aria-label="Main">
+        <ul class="flex items-center gap-1" id="nav-desktop">
+          <li><a class="nav-link" data-nav="home" href="#/home">Home</a></li>
+          <li><a class="nav-link" data-nav="study" href="#/study">Study Hub</a></li>
+          <li><a class="nav-link" data-nav="team" href="#/team">Team</a></li>
+          <li><a class="nav-link" data-nav="contact" href="#/contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <button type="button" id="menu-btn" class="menu-btn md:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg class="icon icon-md" aria-hidden="true" data-open><use href="#i-menu"/></svg>
+        <svg class="icon icon-md hidden" aria-hidden="true" data-close><use href="#i-close"/></svg>
+      </button>
+    </div>
+
+    <nav id="mobile-nav" class="mobile-nav md:hidden" aria-label="Main" hidden>
+      <ul class="mx-auto flex max-w-7xl flex-col gap-1 px-4 pb-4 pt-2 sm:px-6">
+        <li><a class="nav-link nav-link-block" data-nav="home" href="#/home">Home</a></li>
+        <li><a class="nav-link nav-link-block" data-nav="study" href="#/study">Study Hub</a></li>
+        <li><a class="nav-link nav-link-block" data-nav="team" href="#/team">Team</a></li>
+        <li><a class="nav-link nav-link-block" data-nav="contact" href="#/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ============ HOME ============ -->
+    <section data-view="home" aria-labelledby="home-title">
+      <div id="hero" class="hero">
+        <div id="hero-canvas" class="hero-canvas" aria-hidden="true"></div>
+        <div class="hero-scrim" aria-hidden="true"></div>
+
+        <div class="hero-inner mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="hero-copy">
+            <h1 id="home-title" class="wordmark font-display" tabindex="-1"><span>MATRIX</span></h1>
+            <p class="hero-sub font-display">The Math &amp; Mechanics club for Grade 10 and Grade 11.</p>
+            <p class="hero-body">Concept notes, worked examples and practice worksheets for algebra, geometry, calculus basics, kinematics, statics and dynamics. Every topic has a folder you can open in one tap.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="#/study" class="btn btn-primary">Open the Study Hub <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg></a>
+              <a href="#/contact" class="btn btn-ghost">Join the club</a>
+            </div>
+          </div>
+
+          <aside class="hud glass" aria-labelledby="hud-title">
+            <div class="flex items-baseline justify-between gap-3">
+              <h2 id="hud-title" class="hud-title font-display">Transform the space</h2>
+              <p class="hud-det"><span class="text-mist">det M</span> <output id="hud-det" class="font-mono">1.00</output></p>
+            </div>
+            <p class="hud-help">Edit a number or choose a preset. The cube shows where the unit vectors land.</p>
+
+            <div class="matrix-wrap">
+              <div class="matrix" role="group" aria-label="3 by 3 transformation matrix M">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="0" aria-label="Row 1, column 1">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="1" aria-label="Row 1, column 2">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="2" aria-label="Row 1, column 3">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="3" aria-label="Row 2, column 1">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="4" aria-label="Row 2, column 2">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="5" aria-label="Row 2, column 3">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="6" aria-label="Row 3, column 1">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="7" aria-label="Row 3, column 2">
+                <input class="cell" type="number" step="0.1" min="-3" max="3" inputmode="decimal" data-i="8" aria-label="Row 3, column 3">
+              </div>
+              <ul class="legend" aria-label="Basis vectors">
+                <li><i style="background:var(--cyan)"></i>i</li>
+                <li><i style="background:var(--emerald)"></i>j</li>
+                <li><i style="background:var(--amber)"></i>k</li>
+              </ul>
+            </div>
+
+            <p id="hud-note" class="hud-note">Volume unchanged.</p>
+
+            <div class="presets" role="group" aria-label="Matrix presets">
+              <button type="button" class="preset" data-preset="identity" aria-pressed="true">Identity</button>
+              <button type="button" class="preset" data-preset="stretch" aria-pressed="false">Stretch</button>
+              <button type="button" class="preset" data-preset="shear" aria-pressed="false">Shear</button>
+              <button type="button" class="preset" data-preset="rotate" aria-pressed="false">Rotate</button>
+              <button type="button" class="preset" data-preset="reflect" aria-pressed="false">Reflect</button>
+              <button type="button" class="preset" data-preset="flatten" aria-pressed="false">Flatten</button>
+            </div>
+            <p id="hud-live" class="sr-only" role="status"></p>
+          </aside>
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="section-block">
+          <h2 class="section-title font-display">Two subjects, one place to practise</h2>
+          <p class="section-lead">Math builds the tools. Mechanics puts them to work on moving, pushing and balancing things.</p>
+
+          <div class="mt-10 grid gap-5 md:grid-cols-2">
+            <article class="subject-panel glass" data-subject="math">
+              <h3 class="font-display">Math</h3>
+              <p>Sharpen the algebra and geometry habits that make everything later easier, then meet limits and derivatives.</p>
+              <ul class="topic-links">
+                <li><a href="#/study?subject=math&amp;topic=Algebra">Algebra</a></li>
+                <li><a href="#/study?subject=math&amp;topic=Geometry">Geometry</a></li>
+                <li><a href="#/study?subject=math&amp;topic=Calculus%20basics">Calculus basics</a></li>
+              </ul>
+            </article>
+            <article class="subject-panel glass" data-subject="mechanics">
+              <h3 class="font-display">Mechanics</h3>
+              <p>Work forces and motion from the free-body diagram to the final answer, one step at a time.</p>
+              <ul class="topic-links">
+                <li><a href="#/study?subject=mechanics&amp;topic=Kinematics">Kinematics</a></li>
+                <li><a href="#/study?subject=mechanics&amp;topic=Statics">Statics</a></li>
+                <li><a href="#/study?subject=mechanics&amp;topic=Dynamics">Dynamics</a></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="section-block pt-0">
+          <h2 class="section-title font-display">Find a folder in three steps</h2>
+          <ol class="steps mt-10 grid gap-5 md:grid-cols-3">
+            <li class="glass"><span class="step-n font-mono" aria-hidden="true">1</span><h3 class="font-display">Pick your grade</h3><p>Grade 10 and Grade 11 each have their own set of folders.</p></li>
+            <li class="glass"><span class="step-n font-mono" aria-hidden="true">2</span><h3 class="font-display">Filter or search</h3><p>Narrow by subject and topic, or type what you need to revise.</p></li>
+            <li class="glass"><span class="step-n font-mono" aria-hidden="true">3</span><h3 class="font-display">Open it in Google Drive</h3><p>Notes, PDFs and practice worksheets are organised inside each folder.</p></li>
+          </ol>
+        </div>
+
+        <div class="cta-band glass">
+          <div>
+            <h2 class="font-display">Want to join, or have a question?</h2>
+            <p>Send us a message and a club member will reply.</p>
+          </div>
+          <a href="#/contact" class="btn btn-primary">Contact the club <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STUDY HUB ============ -->
+    <section data-view="study" aria-labelledby="study-title" hidden>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header class="page-head">
+          <h1 id="study-title" class="page-title font-display" tabindex="-1">Study Hub</h1>
+          <p class="page-lead">Concept folders for Grade 10 and Grade 11. Each one opens in Google Drive.</p>
+        </header>
+
+        <div class="tabs" role="tablist" aria-label="Grade">
+          <button type="button" role="tab" id="tab-g10" class="tab" data-grade="10" aria-selected="true" aria-controls="study-panel">Grade 10</button>
+          <button type="button" role="tab" id="tab-g11" class="tab" data-grade="11" aria-selected="false" aria-controls="study-panel" tabindex="-1">Grade 11</button>
+        </div>
+
+        <div id="study-panel" role="tabpanel" aria-labelledby="tab-g10">
+          <div class="drive-cta glass">
+            <div>
+              <h2 id="drive-cta-title" class="drive-cta-title font-display">Grade 10 resources on Google Drive</h2>
+              <p class="drive-cta-text">Every note, PDF and worksheet is in the club's shared Drive folder. It opens in a new tab.</p>
+            </div>
+            <a id="drive-cta" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">
+              <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg>
+              Access Google Drive folder
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-external"/></svg>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </div>
+
+          <div class="toolbar glass">
+            <label class="search" for="study-search">
+              <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+              <span class="sr-only">Search folders</span>
+              <input id="study-search" type="search" placeholder="Search topics, e.g. torque or logarithms" autocomplete="off">
+            </label>
+
+            <div class="seg" role="group" aria-label="Subject">
+              <button type="button" class="seg-btn" data-subject="all" aria-pressed="true">All</button>
+              <button type="button" class="seg-btn" data-subject="math" aria-pressed="false">Math</button>
+              <button type="button" class="seg-btn" data-subject="mechanics" aria-pressed="false">Mechanics</button>
+            </div>
+          </div>
+
+          <div id="topic-chips" class="chips" role="group" aria-label="Topic"></div>
+
+          <p id="study-count" class="result-count" aria-live="polite"></p>
+          <div id="folder-grid" class="folder-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TEAM ============ -->
+    <section data-view="team" aria-labelledby="team-title" hidden>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header class="page-head">
+          <h1 id="team-title" class="page-title font-display" tabindex="-1">Team and leadership</h1>
+          <p class="page-lead">The students who run MATRIX. Message the right person and you will get a faster answer.</p>
+        </header>
+        <div id="team-groups" class="flex flex-col gap-14"></div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section data-view="contact" aria-labelledby="contact-title" hidden>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header class="page-head">
+          <h1 id="contact-title" class="page-title font-display" tabindex="-1">Contact and socials</h1>
+          <p class="page-lead">Follow the club, message a member, or send us a note to join.</p>
+        </header>
+
+        <h2 class="block-title font-display">Follow and join</h2>
+        <div id="social-grid" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"></div>
+
+        <section id="yt-stats" class="yt-stats glass" aria-labelledby="yt-stats-title">
+          <div class="yt-stats-head">
+            <p class="yt-badge"><span class="yt-dot" aria-hidden="true"></span><span id="yt-badge-text">Channel stats</span></p>
+            <h3 id="yt-stats-title" class="font-display">The Mathrix on YouTube</h3>
+            <p id="yt-asof" class="yt-asof"></p>
+            <a id="yt-subscribe" class="btn btn-primary mt-5" href="https://youtube.com/@themathrix" target="_blank" rel="noopener noreferrer">
+              <svg class="icon" aria-hidden="true"><use href="#i-youtube"/></svg>
+              Subscribe on YouTube
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-external"/></svg>
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </div>
+          <dl class="yt-stats-grid">
+            <div class="yt-stat">
+              <dt>Subscribers</dt>
+              <dd><span class="count" data-key="subscribers" aria-hidden="true">0</span><span class="sr-only" data-final="subscribers"></span></dd>
+            </div>
+            <div class="yt-stat">
+              <dt>Total video views</dt>
+              <dd><span class="count" data-key="views" aria-hidden="true">0</span><span class="sr-only" data-final="views"></span></dd>
+            </div>
+          </dl>
+        </section>
+
+        <div class="mt-16 grid gap-10 lg:grid-cols-5">
+          <div class="lg:col-span-2">
+            <h2 class="block-title font-display">Message a member</h2>
+            <div id="contact-cards" class="flex flex-col gap-4"></div>
+          </div>
+
+          <div class="lg:col-span-3">
+            <h2 class="block-title font-display">Write to the club</h2>
+            <form id="contact-form" class="form glass" novalidate>
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div class="field">
+                  <label for="f-name">Your name</label>
+                  <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+                  <p class="field-error" id="e-name" hidden></p>
+                </div>
+                <div class="field">
+                  <label for="f-grade">Your grade</label>
+                  <select id="f-grade" name="grade" required aria-describedby="e-grade">
+                    <option value="">Choose a grade</option>
+                    <option value="Grade 10">Grade 10</option>
+                    <option value="Grade 11">Grade 11</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p class="field-error" id="e-grade" hidden></p>
+                </div>
+              </div>
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div class="field">
+                  <label for="f-email">Email</label>
+                  <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+                  <p class="field-error" id="e-email" hidden></p>
+                </div>
+                <div class="field">
+                  <label for="f-topic">What is this about?</label>
+                  <select id="f-topic" name="topic" required aria-describedby="e-topic">
+                    <option value="">Choose one</option>
+                    <option value="I want to join the club">I want to join the club</option>
+                    <option value="I have a question about the Study Hub">I have a question about the Study Hub</option>
+                    <option value="I want to help with content or tech">I want to help with content or tech</option>
+                    <option value="Something else">Something else</option>
+                  </select>
+                  <p class="field-error" id="e-topic" hidden></p>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-message">Message</label>
+                <textarea id="f-message" name="message" rows="5" required minlength="10" aria-describedby="e-message"></textarea>
+                <p class="field-error" id="e-message" hidden></p>
+              </div>
+              <div class="flex flex-wrap items-center gap-4">
+                <button type="submit" class="btn btn-primary" id="form-submit">Send message</button>
+                <p id="form-status" class="form-status" role="status" hidden></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <p class="text-mist">&copy; <span id="year"></span> MATRIX Math &amp; Mechanics Club</p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        <li><a class="foot-link" href="#/home">Home</a></li>
+        <li><a class="foot-link" href="#/study">Study Hub</a></li>
+        <li><a class="foot-link" href="#/team">Team</a></li>
+        <li><a class="foot-link" href="#/contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/study-data.js"></script>
+  <script src="js/hero3d.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

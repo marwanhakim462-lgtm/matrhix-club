@@ -232,10 +232,10 @@
       '<article class="person glass' + (big ? ' person-big' : '') + '" data-tone="' + p.tone + '">' +
         '<div class="person-head">' + avatar(i, p.tone) +
           '<div><p class="person-role">' + esc(p.role) + '</p><h3 class="font-display">' + esc(p.name) + '</h3></div></div>' +
-        '<p class="person-bio">' + esc(p.bio) + '</p>' +
+        (p.bio ? '<p class="person-bio">' + esc(p.bio) + '</p>' : '') +
         '<ul class="person-links">' +
           '<li><a href="' + esc(telHref(p.phone)) + '">' + icon('phone') + esc(p.phone) + '</a></li>' +
-          '<li><a href="mailto:' + esc(p.email) + '">' + icon('mail') + esc(p.email) + '</a></li>' +
+          (p.email ? '<li><a href="mailto:' + esc(p.email) + '">' + icon('mail') + esc(p.email) + '</a></li>' : '') +
         '</ul>' +
         '<a class="btn btn-ghost btn-sm" href="' + esc(waHref(p.whatsapp, 'Hi ' + p.name + ', I found you on the MATRIX website.')) + '" target="_blank" rel="noopener noreferrer">' +
           icon('whatsapp') + 'Message on WhatsApp<span class="sr-only"> (opens in a new tab)</span></a>' +
@@ -276,7 +276,7 @@
         '<h3 class="font-display">' + esc(c.name) + '</h3>' +
         '<ul class="person-links mt-3">' +
           '<li><a href="' + esc(telHref(c.phone)) + '">' + icon('phone') + esc(c.phone) + '</a></li>' +
-          '<li><a href="mailto:' + esc(c.email) + '">' + icon('mail') + esc(c.email) + '</a></li>' +
+          (c.email ? '<li><a href="mailto:' + esc(c.email) + '">' + icon('mail') + esc(c.email) + '</a></li>' : '') +
         '</ul>' +
         '<a class="btn btn-whatsapp btn-sm mt-4" href="' + esc(waHref(c.whatsapp, c.message)) + '" target="_blank" rel="noopener noreferrer">' +
           icon('whatsapp') + 'Message on WhatsApp<span class="sr-only"> (opens in a new tab)</span></a>' +

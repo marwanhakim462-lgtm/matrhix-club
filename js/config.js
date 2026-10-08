@@ -76,83 +76,54 @@ window.MATRIX_CONFIG = {
   /* People students should message. `whatsapp` is digits only, with country code and no "+". */
   contacts: [
     {
-      name: 'Contact name', // REPLACE
-      role: 'Joining the club',
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000', // REPLACE
-      email: 'matrix.club@example.com', // REPLACE
-      message: 'Hi MATRIX, I would like to join the club.'
+      name: 'Mohamed Adham',
+      role: 'Head President',
+      phone: '+20 15 15137637',
+      whatsapp: '201515137637',
+      message: 'Hi Mohamed, I found you on the MATRIX website and would like to join the club.'
     },
     {
-      name: 'Contact name', // REPLACE
-      role: 'Study Hub and folder access',
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000', // REPLACE
-      email: 'matrix.club@example.com', // REPLACE
-      message: 'Hi MATRIX, I have a question about the Study Hub.'
+      name: 'Mohamed Anwar',
+      role: 'Vice Head President',
+      phone: '+20 10 94164045',
+      whatsapp: '201094164045',
+      message: 'Hi Mohamed, I found you on the MATRIX website and have a question.'
     }
   ],
 
   /* Leadership. `group` controls the section; `tone` is the avatar colour (cyan, mint or both). */
+  /* `bio` and `email` are optional: leave them out and the card simply omits them. */
   team: [
     {
       group: 'Founders',
       role: 'Founder',
-      name: 'Founder name', // REPLACE
-      bio: 'Started MATRIX so every student has a clear path through math and mechanics.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'founder@example.com', // REPLACE
+      name: 'El-Sayed Waleed',
+      phone: '+20 12 25357312',
+      whatsapp: '201225357312',
       tone: 'both'
     },
     {
       group: 'Founders',
       role: 'Co-Founder',
-      name: 'Co-founder name', // REPLACE
-      bio: 'Plans events and keeps the club running week to week.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'cofounder@example.com', // REPLACE
+      name: 'Siraj Eldeen',
+      phone: '+20 10 00448421',
+      whatsapp: '201000448421',
       tone: 'both'
     },
     {
-      group: 'Content team',
-      role: 'Content Lead, Math',
-      name: 'Content lead name', // REPLACE
-      bio: 'Writes and checks the algebra, geometry and calculus notes.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'content.math@example.com', // REPLACE
+      group: 'Presidents',
+      role: 'Head President',
+      name: 'Mohamed Adham',
+      phone: '+20 15 15137637',
+      whatsapp: '201515137637',
       tone: 'cyan'
     },
     {
-      group: 'Content team',
-      role: 'Content Lead, Mechanics',
-      name: 'Content lead name', // REPLACE
-      bio: 'Builds the kinematics, statics and dynamics worksheets.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'content.mechanics@example.com', // REPLACE
-      tone: 'mint'
-    },
-    {
-      group: 'Tech team',
-      role: 'Tech Lead',
-      name: 'Tech lead name', // REPLACE
-      bio: 'Maintains this website and the Google Drive library.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'tech@example.com', // REPLACE
-      tone: 'cyan'
-    },
-    {
-      group: 'Tech team',
-      role: 'Tech Lead',
-      name: 'Tech lead name', // REPLACE
-      bio: 'Builds interactive demos and keeps the folders tidy.', // REPLACE
-      phone: '+00 000 000 0000', // REPLACE
-      whatsapp: '000000000000',
-      email: 'tech2@example.com', // REPLACE
+      group: 'Presidents',
+      role: 'Vice Head President',
+      name: 'Mohamed Anwar',
+      phone: '+20 10 94164045',
+      whatsapp: '201094164045',
       tone: 'mint'
     }
   ]

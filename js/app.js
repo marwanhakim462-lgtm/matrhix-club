@@ -238,8 +238,10 @@
   function applyStudyParams(params) {
     var changed = false;
     var g = params.get('grade'), s = params.get('subject'), t = params.get('topic');
+    var q = params.get('q');
     if (g === '10' || g === '11') { state.grade = g; changed = true; }
     if (s === 'math' || s === 'mechanics' || s === 'all') { state.subject = s; changed = true; }
+    if (q !== null || t || s) { state.q = q || ''; changed = true; }   // a link without q clears an old search
     if (t) {
       // open only the requested topic, fold the rest
       collapsed = {};

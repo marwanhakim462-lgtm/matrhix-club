@@ -1,26 +1,44 @@
 /*
- * MATRIX club: everything you are likely to edit lives in this file.
+ * MATHRIX (The Mathrix Club): everything you are likely to edit lives in this file.
  * Values marked REPLACE are placeholders. The site works with them,
  * but links and numbers will not reach a real person or folder until you swap them.
  */
-window.MATRIX_CONFIG = {
+window.MATHRIX_CONFIG = {
   club: {
-    name: 'MATRIX',
-    email: 'matrix.club@example.com' // REPLACE: public club inbox
+    name: 'MATHRIX',
+    email: 'mathrix.club@example.com' // REPLACE: public club inbox (only used if form.method is 'email')
   },
 
   /*
-   * Contact form delivery.
-   *  - endpoint: '' -> the form opens the visitor's email app with the message filled in (mailto:).
-   *  - endpoint: 'https://formspree.io/f/xxxxxxx' -> the form posts JSON to that service instead.
+   * "Write to the club" form delivery. Pick one with `method`:
+   *  - 'whatsapp' (default): opens WhatsApp with the message written out, addressed to `whatsappTo`.
+   *    The visitor presses send. Digits only, with country code and no "+".
+   *  - 'email': opens the visitor's email app addressed to `recipient`.
+   *  - If `endpoint` is set (for example 'https://formspree.io/f/xxxxxxx') the form posts JSON there instead
+   *    and neither of the above is used.
    */
   form: {
+    method: 'whatsapp',
+    whatsappTo: '201515137637', // Mohamed Adham, Head President. Change to whoever should receive messages.
     endpoint: '',
-    recipient: 'matrix.club@example.com' // REPLACE: where mailto messages go
+    recipient: 'mathrix.club@example.com' // REPLACE if you switch method to 'email'
   },
 
-  /* Official club Google Drive folder. Opens from the Study Hub banner and from every folder card without its own `drive` link. */
+  /* Official club Google Drive folder. Opens from the Study Hub banner, the mind map root and every folder without its own `drive` link. */
   driveRoot: 'https://drive.google.com/drive/folders/186KTTxTpmV7JM3TuDDq7GVU6Qvn-Vciq',
+
+  /*
+   * YouTube playlists shown in the Study Hub (strip and mind map), per grade and subject.
+   * Add `lo: 'LO1'` (or 'LO2', ...) to any entry to show its Learning Outcome as a badge before the title.
+   * To add a playlist, copy a line and paste its link from YouTube.
+   */
+  playlistsUrl: 'https://www.youtube.com/@themathrix/playlists',
+  playlists: [
+    { grade: '10', subject: 'math', title: 'Math G10 S1', url: 'https://www.youtube.com/playlist?list=PLbqO2Py1BqB8' },
+    { grade: '10', subject: 'mechanics', title: 'Mechanics G10 S1', url: 'https://www.youtube.com/playlist?list=PLa5SDAS5FSNg' },
+    { grade: '11', subject: 'math', title: 'Math G11 S1', url: 'https://www.youtube.com/playlist?list=PLenm7VhOODfo' },
+    { grade: '11', subject: 'mechanics', title: 'Mechanics G11 S1', url: 'https://www.youtube.com/playlist?list=PLbgcBms6Ua6c' }
+  ],
 
   /*
    * YouTube channel stats.
@@ -80,14 +98,14 @@ window.MATRIX_CONFIG = {
       role: 'Head President',
       phone: '+20 15 15137637',
       whatsapp: '201515137637',
-      message: 'Hi Mohamed, I found you on the MATRIX website and would like to join the club.'
+      message: 'Hi Mohamed, I found you on the MATHRIX website and would like to join the club.'
     },
     {
       name: 'Mohamed Anwar',
       role: 'Vice Head President',
       phone: '+20 10 94164045',
       whatsapp: '201094164045',
-      message: 'Hi Mohamed, I found you on the MATRIX website and have a question.'
+      message: 'Hi Mohamed, I found you on the MATHRIX website and have a question.'
     }
   ],
 

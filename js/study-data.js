@@ -1,10 +1,10 @@
 /*
  * Study Hub folders.
  * To link a card to its own Drive folder, add  drive: 'https://drive.google.com/drive/folders/...'
- * Cards without `drive` fall back to MATRIX_CONFIG.driveRoot.
+ * Cards without `drive` fall back to MATHRIX_CONFIG.driveRoot.
  * resources: any of 'notes', 'pdf', 'worksheet'.
  */
-window.MATRIX_STUDY = [
+window.MATHRIX_STUDY = [
   /* ---------- Grade 10: Math ---------- */
   { grade: '10', subject: 'math', topic: 'Algebra', title: 'Quadratics and the discriminant',
     summary: 'Solve by factoring, completing the square and the formula, then read the roots from the graph.',

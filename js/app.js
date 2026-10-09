@@ -1,9 +1,9 @@
-/* MATRIX site: hash router, Study Hub, team, contact and form. */
+/* MATHRIX site: hash router, Study Hub mind map, team, contact and form. */
 (function () {
   'use strict';
 
-  var CFG = window.MATRIX_CONFIG;
-  var DATA = window.MATRIX_STUDY || [];
+  var CFG = window.MATHRIX_CONFIG;
+  var DATA = window.MATHRIX_STUDY || [];
 
   /* ---------- helpers ---------- */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -31,10 +31,10 @@
   /* ---------- router ---------- */
   var VIEWS = ['home', 'study', 'team', 'contact'];
   var TITLES = {
-    home: 'MATRIX | Math & Mechanics Club',
-    study: 'Study Hub | MATRIX',
-    team: 'Team and leadership | MATRIX',
-    contact: 'Contact and socials | MATRIX'
+    home: 'MATHRIX | Math & Mechanics Club',
+    study: 'Study Hub | MATHRIX',
+    team: 'Team and leadership | MATHRIX',
+    contact: 'Contact and socials | MATHRIX'
   };
   var firstRoute = true;
 
@@ -70,6 +70,13 @@
     firstRoute = false;
   }
 
+  /* "About the club" scrolls to the section without touching the route hash. */
+  $('#about-link').addEventListener('click', function (e) {
+    e.preventDefault();
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('#about').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+
   /* ---------- mobile menu ---------- */
   var menuBtn = $('#menu-btn');
   var mobileNav = $('#mobile-nav');
@@ -87,75 +94,132 @@
   });
   window.matchMedia('(min-width: 768px)').addEventListener('change', closeMenu);
 
-  /* ---------- Study Hub ---------- */
-  var state = { grade: '10', subject: 'all', topic: 'all', q: '' };
-  var gridEl = $('#folder-grid');
+  /* ---------- Study Hub: mind map ---------- */
+  var PLAYLISTS = CFG.playlists || [];
+  var SUBJECTS = [{ id: 'math', label: 'Math' }, { id: 'mechanics', label: 'Mechanics' }];
+  var state = { grade: '10', subject: 'all', q: '' };
+  var collapsed = {};               // key -> true while a branch is folded
+  var mapEl = $('#mindmap');
   var countEl = $('#study-count');
-  var chipsEl = $('#topic-chips');
   var searchEl = $('#study-search');
   var panelEl = $('#study-panel');
   var tabs = $$('.tab');
   var segBtns = $$('.seg-btn');
+  var tipId = 0;
 
-  function inScope(item) { return item.grade === state.grade && (state.subject === 'all' || item.subject === state.subject); }
+  $('#drive-cta').href = CFG.driveRoot;
+  $('#pl-all').href = CFG.playlistsUrl;
 
-  function topicList() {
+  function searching() { return state.q.trim() !== ''; }
+  function matches(text) {
+    var q = state.q.trim().toLowerCase();
+    return !q || text.toLowerCase().indexOf(q) >= 0;
+  }
+  function topicsFor(subject) {
     var seen = [];
-    DATA.filter(inScope).forEach(function (d) { if (seen.indexOf(d.topic) < 0) seen.push(d.topic); });
+    DATA.forEach(function (d) {
+      if (d.grade === state.grade && d.subject === subject && seen.indexOf(d.topic) < 0) seen.push(d.topic);
+    });
     return seen;
   }
+  var SR_NEW_TAB = '<span class="sr-only"> (opens in a new tab)</span>';
 
-  function renderChips() {
-    var topics = topicList();
-    if (state.topic !== 'all' && topics.indexOf(state.topic) < 0) state.topic = 'all';
-    var html = ['<button type="button" class="chip" data-topic="all" aria-pressed="' + (state.topic === 'all') + '">All topics</button>'];
-    topics.forEach(function (t) {
-      html.push('<button type="button" class="chip" data-topic="' + esc(t) + '" aria-pressed="' + (state.topic === t) + '">' + esc(t) + '</button>');
-    });
-    chipsEl.innerHTML = html.join('');
-  }
-
-  function folderCard(d) {
+  function folderLeaf(d) {
+    var id = 'mm-tip-' + (tipId++);
     var href = d.drive || CFG.driveRoot;
-    var res = d.resources.map(function (r) {
-      return '<li class="res">' + icon(RES[r].icon) + RES[r].label + '</li>';
-    }).join('');
-    return '' +
-      '<article class="folder" data-subject="' + d.subject + '">' +
-        '<p class="folder-topic">' + SUBJECT_LABEL[d.subject] + ' / ' + esc(d.topic) + '</p>' +
-        '<h3 class="font-display">' + esc(d.title) + '</h3>' +
-        '<p class="folder-sum">' + esc(d.summary) + '</p>' +
-        '<ul class="res-list" aria-label="Inside this folder">' + res + '</ul>' +
-        '<a class="folder-cta" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' +
-          icon('folder') + 'Open folder in Drive' + icon('external', 'icon-sm') +
-          '<span class="sr-only"> (opens in a new tab)</span>' +
-        '</a>' +
-      '</article>';
+    var icons = d.resources.map(function (r) { return icon(RES[r].icon); }).join('');
+    var names = d.resources.map(function (r) { return RES[r].label; }).join(', ');
+    return '<li class="mm-item mm-leaf-item">' +
+      '<a class="mm-node mm-leaf" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer" aria-describedby="' + id + '">' +
+        icon('folder') + '<span class="mm-leaf-title">' + esc(d.title) + '</span>' +
+        '<span class="mm-res" aria-hidden="true">' + icons + '</span>' + icon('external', 'icon-sm mm-ext') + SR_NEW_TAB +
+      '</a>' +
+      '<span id="' + id + '" class="mm-tip" role="tooltip">' + esc(d.summary) + '<span class="mm-tip-res">Inside: ' + esc(names) + '</span></span>' +
+    '</li>';
   }
 
-  function renderGrid() {
-    var q = state.q.trim().toLowerCase();
-    var list = DATA.filter(function (d) {
-      if (!inScope(d)) return false;
-      if (state.topic !== 'all' && d.topic !== state.topic) return false;
-      if (!q) return true;
-      return (d.title + ' ' + d.summary + ' ' + d.topic + ' ' + SUBJECT_LABEL[d.subject]).toLowerCase().indexOf(q) >= 0;
+  function playlistLeaf(p) {
+    return '<li class="mm-item mm-leaf-item">' +
+      '<a class="mm-node mm-leaf mm-leaf-video" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' +
+        icon('play') + (p.lo ? '<span class="mm-lo">' + esc(p.lo) + '</span>' : '') +
+        '<span class="mm-leaf-title">' + esc(p.title) + '</span><span class="mm-kind">Playlist</span>' +
+        icon('external', 'icon-sm mm-ext') + SR_NEW_TAB +
+      '</a></li>';
+  }
+
+  function toggleNode(key, cls, label, count, open, ctrlId) {
+    return '<button type="button" class="mm-node mm-toggle ' + cls + '" data-key="' + esc(key) + '" aria-expanded="' + open + '" aria-controls="' + ctrlId + '"' + (searching() ? ' disabled' : '') + '>' +
+      icon('chevron', 'mm-chev') + '<span class="mm-label">' + esc(label) + '</span><span class="mm-count" aria-label="' + count + ' items">' + count + '</span></button>';
+  }
+
+  function branch(s, tally) {
+    var kids = [], folders = 0, videos = 0;
+
+    PLAYLISTS.forEach(function (p) {
+      if (p.grade === state.grade && p.subject === s.id && matches(p.title + ' ' + (p.lo || '') + ' playlist video youtube ' + s.label)) {
+        kids.push(playlistLeaf(p));
+        videos++;
+      }
     });
 
-    countEl.textContent = list.length + (list.length === 1 ? ' folder' : ' folders') + ' in Grade ' + state.grade;
+    topicsFor(s.id).forEach(function (topic) {
+      var leaves = DATA.filter(function (d) {
+        return d.grade === state.grade && d.subject === s.id && d.topic === topic &&
+          matches(d.title + ' ' + d.summary + ' ' + topic + ' ' + s.label);
+      });
+      if (!leaves.length) return;
+      folders += leaves.length;
+      var key = s.id + '/' + topic, open = searching() || !collapsed[key], ctrl = 'mm-' + s.id + '-' + topic.replace(/\W+/g, '-').toLowerCase();
+      kids.push('<li class="mm-item mm-topic' + (open ? '' : ' is-collapsed') + '">' +
+        toggleNode(key, 'mm-topic-node', topic, leaves.length, open, ctrl) +
+        '<ul class="mm-children" id="' + ctrl + '">' + leaves.map(folderLeaf).join('') + '</ul></li>');
+    });
 
-    if (!list.length) {
-      gridEl.innerHTML = '<div class="empty glass">' +
-        '<p class="font-display empty-title">No folders match that search</p>' +
-        '<p>Try a shorter word, or clear the filters to see every Grade ' + state.grade + ' folder.</p>' +
-        '<button type="button" class="btn btn-ghost" data-clear>Clear filters</button></div>';
+    if (!kids.length) return '';
+    tally.folders += folders;
+    tally.videos += videos;
+    var open = searching() || !collapsed[s.id], ctrl = 'mm-' + s.id;
+    return '<li class="mm-item mm-subject' + (open ? '' : ' is-collapsed') + '" data-subject="' + s.id + '">' +
+      toggleNode(s.id, 'mm-subject-node', s.label, folders + videos, open, ctrl) +
+      '<ul class="mm-children" id="' + ctrl + '">' + kids.join('') + '</ul></li>';
+  }
+
+  function renderMap() {
+    var tally = { folders: 0, videos: 0 };
+    var branches = SUBJECTS.filter(function (s) { return state.subject === 'all' || state.subject === s.id; })
+      .map(function (s) { return branch(s, tally); }).join('');
+
+    mapEl.setAttribute('aria-label', 'Grade ' + state.grade + ' mind map');
+    var n = tally.folders, v = tally.videos;
+    countEl.textContent = n + (n === 1 ? ' concept folder' : ' concept folders') + ' and ' + v + (v === 1 ? ' playlist' : ' playlists') + ' in Grade ' + state.grade;
+
+    if (!branches) {
+      mapEl.innerHTML = '<div class="empty glass">' +
+        '<p class="font-display empty-title">Nothing on the map matches that search</p>' +
+        '<p>Try a shorter word, or clear the search to see every Grade ' + state.grade + ' branch.</p>' +
+        '<button type="button" class="btn btn-ghost" data-clear>Clear search</button></div>';
       return;
     }
-    gridEl.innerHTML = list.map(folderCard).join('');
+
+    mapEl.innerHTML = '<div class="mm-item mm-rootitem">' +
+      '<div class="mm-node mm-root-node">' +
+        '<span class="mm-root-title font-display">Grade ' + state.grade + '</span>' +
+        '<span class="mm-root-sub">Study mind map</span>' +
+        '<a class="mm-root-link" href="' + esc(CFG.driveRoot) + '" target="_blank" rel="noopener noreferrer">' +
+          icon('folder') + 'All files on Drive' + icon('external', 'icon-sm') + SR_NEW_TAB + '</a>' +
+      '</div>' +
+      '<ul class="mm-children mm-top">' + branches + '</ul></div>';
   }
 
-  var driveCta = $('#drive-cta');
-  driveCta.href = CFG.driveRoot;
+  function renderPlaylists() {
+    var list = PLAYLISTS.filter(function (p) { return p.grade === state.grade; });
+    $('#pl-title').textContent = 'Grade ' + state.grade + ' video playlists';
+    $('#playlist-list').innerHTML = list.length ? list.map(function (p) {
+      return '<li><a class="pl-btn" data-subject="' + p.subject + '" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' +
+        icon('play', 'icon-md') + (p.lo ? '<span class="pl-lo">' + esc(p.lo) + '</span>' : '') +
+        '<span class="pl-name">' + esc(p.title) + '</span>' + icon('external', 'icon-sm') + SR_NEW_TAB + '</a></li>';
+    }).join('') : '<li class="pl-empty">Playlists for this grade are coming soon.</li>';
+  }
 
   function syncStudyUI() {
     $('#drive-cta-title').textContent = 'Grade ' + state.grade + ' resources on Google Drive';
@@ -167,17 +231,22 @@
     });
     segBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-subject') === state.subject)); });
     if (searchEl.value !== state.q) searchEl.value = state.q;
-    renderChips();
-    renderGrid();
+    renderPlaylists();
+    renderMap();
   }
 
   function applyStudyParams(params) {
     var changed = false;
     var g = params.get('grade'), s = params.get('subject'), t = params.get('topic');
     if (g === '10' || g === '11') { state.grade = g; changed = true; }
-    if (s === 'math' || s === 'mechanics' || s === 'all') { state.subject = s; state.topic = 'all'; changed = true; }
-    if (t) { state.topic = t; changed = true; }
-    if (changed || !gridEl.children.length) syncStudyUI();
+    if (s === 'math' || s === 'mechanics' || s === 'all') { state.subject = s; changed = true; }
+    if (t) {
+      // open only the requested topic, fold the rest
+      collapsed = {};
+      DATA.forEach(function (d) { if (d.topic !== t) collapsed[d.subject + '/' + d.topic] = true; });
+      changed = true;
+    }
+    if (changed || !mapEl.children.length) syncStudyUI();
   }
 
   tabs.forEach(function (tab, i) {
@@ -192,24 +261,32 @@
     });
   });
   segBtns.forEach(function (b) {
-    b.addEventListener('click', function () { state.subject = b.getAttribute('data-subject'); state.topic = 'all'; syncStudyUI(); });
+    b.addEventListener('click', function () { state.subject = b.getAttribute('data-subject'); syncStudyUI(); });
   });
-  chipsEl.addEventListener('click', function (e) {
-    var chip = e.target.closest('.chip');
-    if (!chip) return;
-    state.topic = chip.getAttribute('data-topic');
-    renderChips();
-    renderGrid();
-    var again = $('.chip[data-topic="' + (window.CSS && CSS.escape ? CSS.escape(state.topic) : state.topic) + '"]', chipsEl);
-    if (again) again.focus();
-  });
-  searchEl.addEventListener('input', function () { state.q = searchEl.value; renderGrid(); });
-  gridEl.addEventListener('click', function (e) {
+  searchEl.addEventListener('input', function () { state.q = searchEl.value; renderMap(); });
+
+  mapEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.mm-toggle');
+    if (btn && !btn.disabled) {
+      var key = btn.getAttribute('data-key');
+      collapsed[key] = !collapsed[key];
+      renderMap();
+      var again = $('.mm-toggle[data-key="' + (window.CSS && CSS.escape ? CSS.escape(key) : key) + '"]', mapEl);
+      if (again) again.focus();
+      return;
+    }
     if (e.target.closest('[data-clear]')) {
-      state.subject = 'all'; state.topic = 'all'; state.q = '';
+      state.q = ''; state.subject = 'all';
       syncStudyUI();
       searchEl.focus();
     }
+  });
+
+  $('#mm-expand').addEventListener('click', function () { collapsed = {}; renderMap(); });
+  $('#mm-collapse').addEventListener('click', function () {
+    collapsed = {};
+    DATA.forEach(function (d) { collapsed[d.subject + '/' + d.topic] = true; });
+    renderMap();
   });
 
   /* ---------- Team ---------- */
@@ -237,7 +314,7 @@
           '<li><a href="' + esc(telHref(p.phone)) + '">' + icon('phone') + esc(p.phone) + '</a></li>' +
           (p.email ? '<li><a href="mailto:' + esc(p.email) + '">' + icon('mail') + esc(p.email) + '</a></li>' : '') +
         '</ul>' +
-        '<a class="btn btn-ghost btn-sm" href="' + esc(waHref(p.whatsapp, 'Hi ' + p.name + ', I found you on the MATRIX website.')) + '" target="_blank" rel="noopener noreferrer">' +
+        '<a class="btn btn-ghost btn-sm" href="' + esc(waHref(p.whatsapp, 'Hi ' + p.name + ', I found you on the MATHRIX website.')) + '" target="_blank" rel="noopener noreferrer">' +
           icon('whatsapp') + 'Message on WhatsApp<span class="sr-only"> (opens in a new tab)</span></a>' +
       '</article>';
   }
@@ -445,10 +522,29 @@
     }
 
     var subject = payload.topic + ' (' + payload.grade + ')';
-    var body = payload.message + '\n\n' + payload.name + '\n' + payload.grade + '\n' + payload.email;
-    window.location.href = 'mailto:' + encodeURIComponent(CFG.form.recipient).replace('%40', '@') +
-      '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    showStatus('ok', 'Your email app should open with this message ready to send. If it does not, write to ' + CFG.form.recipient + '.');
+
+    if (CFG.form.method === 'email') {
+      var body = payload.message + '\n\n' + payload.name + '\n' + payload.grade + '\n' + payload.email;
+      window.location.href = 'mailto:' + encodeURIComponent(CFG.form.recipient).replace('%40', '@') +
+        '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      showStatus('ok', 'Your email app should open with this message ready to send. If it does not, write to ' + CFG.form.recipient + '.');
+      return;
+    }
+
+    // Default: open WhatsApp with the message written out, ready for the visitor to send.
+    var text = 'New message from the MATHRIX website\n' +
+      'Topic: ' + payload.topic + '\n' +
+      'Name: ' + payload.name + '\n' +
+      'Grade: ' + payload.grade + '\n' +
+      'Email: ' + payload.email + '\n\n' + payload.message;
+    var win = window.open(waHref(CFG.form.whatsappTo, text), '_blank');
+    if (win) {
+      win.opener = null;
+      form.reset();
+      showStatus('ok', 'WhatsApp is opening with your message ready. Press send there to deliver it to the club.');
+    } else {
+      showStatus('error', 'Your browser blocked WhatsApp from opening. Allow pop-ups for this site and send again, or message the club directly on WhatsApp.');
+    }
   });
 
   /* ---------- boot ---------- */

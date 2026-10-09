@@ -91,6 +91,8 @@
   }
 
   var scene, camera, rig, ball, ghosts = [], arcLine, arcDots, apexMark, apexDrop, landMark, barrel, speedArrow;
+  var glow, trail, trailGeo, trailAge, trailVel, trailBase, trailHead = 0, emitAcc = 0;
+  var TRAIL_N = 260, TRAIL_LIFE = 1.1;
   var CYAN = 0x4fd8ff, VIOLET = 0x9a8cff, AMBER = 0xffcf5c;
   var X0 = -6, LIFT = 0.3, BALL_R = 0.4, GHOSTS = 10, ARC_N = 140;
   var k = 0.1, kTarget = 0.1;          // scene units per metre
@@ -132,13 +134,69 @@
     return new THREE.CanvasTexture(cv);
   }
 
-  function gridLines(halfX, halfZ, color, opacity) {
-    var v = [], i;
-    for (i = -halfX; i <= halfX; i++) v.push(i, 0, -halfZ, i, 0, halfZ);
-    for (i = -halfZ; i <= halfZ; i++) v.push(-halfX, 0, i, halfX, 0, i);
+  /* Grid lines fade toward their edges: each vertex carries an alpha that falls off with distance,
+     so the lines dissolve into the background instead of stopping at a hard edge. */
+  function fadeLines(segs, color, strength, falloff) {
+    var SUB = 18, pos = [], col = [], c = new THREE.Color(color), i, e;
+    segs.forEach(function (sg) {
+      for (i = 0; i < SUB; i++) {
+        for (e = 0; e < 2; e++) {
+          var t = (i + e) / SUB, x = sg[0] + (sg[3] - sg[0]) * t, y = sg[1] + (sg[4] - sg[1]) * t, z = sg[2] + (sg[5] - sg[2]) * t;
+          var f = falloff(x, y, z) * strength;
+          pos.push(x, y, z);
+          col.push(c.r, c.g, c.b, f);
+        }
+      }
+    });
     var g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
-    return new THREE.LineSegments(g, lineMat(color, opacity));
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 4));
+    return new THREE.LineSegments(g, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false }));
+  }
+
+  function glowTexture() {
+    var cv = document.createElement('canvas');
+    cv.width = cv.height = 128;
+    var g = cv.getContext('2d'), grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(0.25, 'rgba(255,255,255,0.32)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad; g.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(cv);
+  }
+
+  /* particle trail: additive points that shrink to black as they age */
+  var colA = new THREE.Color(0x4fd8ff), colB = new THREE.Color(0x9a8cff), colTmp = new THREE.Color();
+  function emit(x, y, spread, speed) {
+    var i = trailHead, a = Math.random() * Math.PI * 2, sp = Math.random() * speed;
+    trailHead = (trailHead + 1) % TRAIL_N;
+    trailGeo.attributes.position.setXYZ(i, x + (Math.random() - 0.5) * spread, y + (Math.random() - 0.5) * spread, (Math.random() - 0.5) * spread * 2);
+    trailVel[i * 3] = Math.cos(a) * sp;
+    trailVel[i * 3 + 1] = Math.sin(a) * sp + 0.12;
+    trailVel[i * 3 + 2] = (Math.random() - 0.5) * sp;
+    colTmp.copy(colA).lerp(colB, Math.random());
+    trailBase[i * 3] = colTmp.r; trailBase[i * 3 + 1] = colTmp.g; trailBase[i * 3 + 2] = colTmp.b;
+    trailAge[i] = 0;
+  }
+  function stepTrail(dt) {
+    var pos = trailGeo.attributes.position, col = trailGeo.attributes.color, alive = false, touched = false, i;
+    for (i = 0; i < TRAIL_N; i++) {
+      if (trailAge[i] >= TRAIL_LIFE) continue;
+      trailAge[i] += dt;
+      var f = trailAge[i] >= TRAIL_LIFE ? 0 : Math.pow(1 - trailAge[i] / TRAIL_LIFE, 2);
+      pos.setXYZ(i, pos.getX(i) + trailVel[i * 3] * dt, pos.getY(i) + trailVel[i * 3 + 1] * dt, pos.getZ(i) + trailVel[i * 3 + 2] * dt);
+      col.setXYZW(i, trailBase[i * 3], trailBase[i * 3 + 1], trailBase[i * 3 + 2], f);
+      touched = true;
+      if (f > 0) alive = true;
+    }
+    if (touched) { pos.needsUpdate = true; col.needsUpdate = true; }
+    return alive;
+  }
+  function clearTrail() {
+    if (!trailGeo) return;
+    trailAge.fill(TRAIL_LIFE);
+    trailGeo.attributes.color.array.fill(0);
+    trailGeo.attributes.color.needsUpdate = true;
   }
 
   function build() {
@@ -147,17 +205,15 @@
     rig = new THREE.Group();
     scene.add(rig);
 
-    // ground grid, back wall grid and the x axis
-    rig.add(gridLines(8, 4, VIOLET, 0.2));
-    var wall = [], i;
-    for (i = -8; i <= 8; i++) wall.push(i, 0, -4, i, 7, -4);
-    for (i = 0; i <= 7; i++) wall.push(-8, i, -4, 8, i, -4);
-    var wg = new THREE.BufferGeometry();
-    wg.setAttribute('position', new THREE.Float32BufferAttribute(wall, 3));
-    rig.add(new THREE.LineSegments(wg, lineMat(CYAN, 0.08)));
-    var axis = new THREE.BufferGeometry();
-    axis.setAttribute('position', new THREE.Float32BufferAttribute([-8, 0, 0, 8, 0, 0], 3));
-    rig.add(new THREE.Line(axis, lineMat(VIOLET, 0.55)));
+    // ground grid, back wall grid and the x axis all dissolve toward their edges
+    var ground = [], wall = [], i;
+    for (i = -8; i <= 8; i++) ground.push([i, 0, -4, i, 0, 4]);
+    for (i = -4; i <= 4; i++) ground.push([-8, 0, i, 8, 0, i]);
+    rig.add(fadeLines(ground, VIOLET, 0.62, function (x, y, z) { return Math.pow(Math.max(0, 1 - Math.sqrt(x * x / 81 + z * z / 23)), 1.25); }));
+    for (i = -8; i <= 8; i++) wall.push([i, 0, -4, i, 7, -4]);
+    for (i = 0; i <= 7; i++) wall.push([-8, i, -4, 8, i, -4]);
+    rig.add(fadeLines(wall, CYAN, 0.34, function (x, y) { return Math.pow(Math.max(0, 1 - Math.sqrt(x * x / 81 + (y - 3.2) * (y - 3.2) / 21)), 1.25); }));
+    rig.add(fadeLines([[-8, 0, 0, 8, 0, 0]], VIOLET, 1, function (x) { return Math.pow(Math.max(0, 1 - Math.abs(x) / 9), 1.1); }));
 
     // launcher: base and barrel
     var base = new THREE.CylinderGeometry(0.34, 0.52, 0.34, 10);
@@ -217,6 +273,24 @@
       ghosts.push(gh);
     }
 
+    // soft bloom around the ball and the particle trail behind it
+    glow = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: glowTexture(), color: CYAN, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false
+    }));
+    glow.scale.set(2.8, 2.8, 1);
+    rig.add(glow);
+    trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(TRAIL_N * 3), 3));
+    trailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(TRAIL_N * 4), 4));
+    trailAge = new Float32Array(TRAIL_N).fill(TRAIL_LIFE);
+    trailVel = new Float32Array(TRAIL_N * 3);
+    trailBase = new Float32Array(TRAIL_N * 3);
+    trail = new THREE.Points(trailGeo, new THREE.PointsMaterial({
+      size: 0.24, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+    }));
+    trail.frustumCulled = false;
+    rig.add(trail);
+
     host.appendChild(renderer.domElement);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0);
@@ -269,6 +343,7 @@
     kTarget = 1 / cell;
     el.scale.textContent = 'One grid square is ' + (cell >= 1 ? cell : cell.toFixed(1)) + ' m.';
     flying = landed = false;
+    clearTrail();
     if (renderer) {
       if (P.n !== lastN) { rebuildBall(); lastN = P.n; }
       ghosts.forEach(function (g) { g.visible = false; });
@@ -283,6 +358,7 @@
       fmt(p.R, 1) + ' metres, reach ' + fmt(p.H, 1) + ' metres high and stay in the air ' + fmt(p.T, 2) + ' seconds.';
     if (!renderer) return;
     ghosts.forEach(function (g) { g.visible = false; });
+    clearTrail();
     simT = 0;
     playRate = p.T / clamp(p.T, 2.5, 6.5);
     if (reduceMotion) { simT = p.T; flying = false; landed = true; } else { flying = true; landed = false; }
@@ -373,13 +449,24 @@
     // ball
     if (flying) {
       simT += dt * playRate;
-      if (simT >= p.T) { simT = p.T; flying = false; landed = true; }
+      if (simT >= p.T) {
+        simT = p.T; flying = false; landed = true;
+        pointAt(p.T, tmp);
+        for (var b = 0; b < 28; b++) emit(tmp.x, LIFT, 0.12, 1.5);   // small burst where it lands
+      }
       busy = true;
     }
     var tBall = (flying || landed) ? simT : 0;
     pointAt(tBall, tmp);
     ball.position.set(tmp.x, Math.max(tmp.y, LIFT), 0);
-    if (flying) { spin += dt * 5; ball.rotation.z = -spin; ball.rotation.y = spin * 0.6; }
+    if (flying) {
+      spin += dt * 5; ball.rotation.z = -spin; ball.rotation.y = spin * 0.6;
+      emitAcc += dt * 75;
+      while (emitAcc >= 1) { emitAcc -= 1; emit(ball.position.x, ball.position.y, 0.14, 0.4); }
+    }
+    glow.position.copy(ball.position);
+    glow.material.opacity = flying ? 0.62 : (landed ? 0.3 : 0.38);
+    if (stepTrail(dt)) busy = true;
 
     // ghosts: one per equal slice of the flight, left behind as the ball passes
     for (var i = 0; i < GHOSTS; i++) {

@@ -547,6 +547,25 @@
     }
   });
 
+  /* Spotlight: each frosted card glows where the pointer is. Only the CSS variables change. */
+  (function () {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var raf = 0, target = null, px = 0, py = 0;
+    document.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse' || !e.target.closest) return;
+      var card = e.target.closest('.glass');
+      if (!card) return;
+      target = card; px = e.clientX; py = e.clientY;
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        raf = 0;
+        var r = target.getBoundingClientRect();
+        target.style.setProperty('--mx', (px - r.left) + 'px');
+        target.style.setProperty('--my', (py - r.top) + 'px');
+      });
+    }, { passive: true });
+  })();
+
   /* ---------- boot ---------- */
   $('#year').textContent = new Date().getFullYear();
   renderTeam();

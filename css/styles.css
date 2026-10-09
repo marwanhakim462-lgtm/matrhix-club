@@ -5,24 +5,26 @@
    Motion rule: only transform and opacity animate. Hover effects need a fine pointer.
    ========================================================= */
 :root {
-  --void: #070a12;
-  --ink: #0b1020;
-  --glass: rgba(15, 21, 38, 0.58);
-  --glass-solid: #0e1424;
-  --line: rgba(154, 173, 255, 0.13);
-  --line-strong: rgba(154, 173, 255, 0.28);
+  --void: #090a0f;
+  --ink: #0e1019;
+  --glass: rgba(18, 20, 29, 0.6);
+  --glass-solid: #12141d;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
   --cyan: #4fd8ff;
-  --violet: #9a8cff;
+  --violet: #a5a0ff;
   --emerald: var(--violet);   /* legacy name: the Mechanics colour is now violet */
   --amber: #ffcf5c;
   --danger: #ff909c;
   --coral: #ff7a8a;
-  --chalk: #eaf0ff;
-  --mist: #98a4c4;
+  --chalk: #f1f5f9;
+  --mist: #94a3b8;
   --radius: 18px;
   --header-h: 4.25rem;
 
+  --indigo: #6366f1;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --spring: linear(0, 0.0487, 0.1558, 0.2826, 0.4082, 0.5221, 0.6204, 0.7023, 0.7689, 0.8222, 0.8641, 0.8968, 0.922, 0.9414, 0.9561, 0.9672, 0.9756, 0.9819, 0.9866, 0.9901, 0.9927, 0.9946, 1);
 }
@@ -46,9 +48,9 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: -2; pointer-events: none;
   background:
-    radial-gradient(52rem 34rem at 8% -6%, rgba(79, 216, 255, 0.13), transparent 64%),
-    radial-gradient(46rem 34rem at 96% 6%, rgba(154, 140, 255, 0.14), transparent 62%),
-    radial-gradient(60rem 36rem at 50% 112%, rgba(86, 110, 255, 0.1), transparent 64%);
+    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 70%),
+    radial-gradient(44rem 30rem at 4% 8%, rgba(79, 216, 255, 0.07), transparent 66%),
+    radial-gradient(56rem 34rem at 50% 118%, rgba(99, 102, 241, 0.1), transparent 66%);
 }
 body::after {
   content: '';
@@ -84,14 +86,15 @@ body::after {
 
 /* ---------- Glass: frosted surface, hairline border, soft depth ---------- */
 .glass {
+  position: relative; isolation: isolate; overflow: hidden;
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012) 42%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.01) 42%),
     var(--glass);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 30px 60px -34px rgba(3, 5, 14, 0.95);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-          backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 32px 64px -36px rgba(0, 0, 0, 0.95);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+          backdrop-filter: blur(20px) saturate(140%);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass { background: var(--glass-solid); }
@@ -100,7 +103,7 @@ body::after {
 /* ---------- Header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(7, 10, 18, 0.62);
+  background: rgba(9, 10, 15, 0.62);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
           backdrop-filter: blur(18px) saturate(160%);
   box-shadow: 0 1px 0 var(--line), 0 12px 32px -24px rgba(0, 0, 0, 0.9);
@@ -139,7 +142,7 @@ body::after {
 }
 .menu-btn:active { transform: scale(0.94); }
 @media (min-width: 768px) { .menu-btn { display: none; } }
-.mobile-nav { border-top: 1px solid var(--line); background: rgba(7, 10, 18, 0.94); }
+.mobile-nav { border-top: 1px solid var(--line); background: rgba(9, 10, 15, 0.95); }
 
 /* ---------- Buttons: press scales down, glow fades in, hover needs a fine pointer ---------- */
 .btn {
@@ -174,7 +177,7 @@ body::after {
 /* =========================================================
    Hero
    ========================================================= */
-.hero { position: relative; isolation: isolate; overflow: hidden; }
+.hero { position: relative; isolation: isolate; overflow: hidden; background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 70%); }
 .hero::before, .hero::after { content: ''; position: absolute; z-index: 0; pointer-events: none; background-repeat: no-repeat; }
 .hero::before {              /* orbit rings, behind the 3D stage */
   width: min(62rem, 130vw); aspect-ratio: 1; right: -18%; top: -26%;
@@ -206,9 +209,10 @@ body::after {
 /* One orchestrated moment on load: the copy and the stage rise into place on a spring. */
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .hero-copy > * { animation: rise 0.7s var(--spring) both; }
-.hero-copy > :nth-child(2) { animation-delay: 70ms; }
-.hero-copy > :nth-child(3) { animation-delay: 140ms; }
-.hero-copy > :nth-child(4) { animation-delay: 210ms; }
+.hero-copy > :nth-child(2) { animation-delay: 60ms; }
+.hero-copy > :nth-child(3) { animation-delay: 120ms; }
+.hero-copy > :nth-child(4) { animation-delay: 180ms; }
+.hero-copy > :nth-child(5) { animation-delay: 240ms; }
 .lab-stage { animation: rise 0.8s var(--spring) 120ms both; }
 
 /* The wordmark sits inside matrix brackets, drawn with borders. */
@@ -220,15 +224,16 @@ body::after {
   outline: none;
 }
 .wordmark span {
-  background: linear-gradient(100deg, var(--chalk) 22%, var(--cyan) 66%, var(--violet));
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 36%, #94a3b8 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 26px rgba(99, 102, 241, 0.38));
 }
 .wordmark::before, .wordmark::after {
   content: ''; position: absolute; top: 0; bottom: 0; width: 0.15em;
   border: 0.028em solid var(--cyan);
 }
-.wordmark::before { left: 0; border-right: 0; }
-.wordmark::after { right: 0; border-left: 0; border-color: var(--violet); }
+.wordmark::before { left: 0; border-right: 0; filter: drop-shadow(0 0 9px rgba(79, 216, 255, 0.6)); }
+.wordmark::after { right: 0; border-left: 0; border-color: var(--violet); filter: drop-shadow(0 0 9px rgba(129, 120, 255, 0.6)); }
 
 .hero-sub { margin-top: 1.6rem; font-size: clamp(1.2rem, 2.8vw, 1.6rem); font-weight: 600; line-height: 1.32; letter-spacing: -0.01em; color: var(--chalk); }
 .hero-body { margin-top: 1.1rem; max-width: 32rem; color: var(--mist); font-size: 1.04rem; line-height: 1.75; }
@@ -249,29 +254,29 @@ body::after {
 .ctl .num { grid-row: 2; grid-column: 2; }
 .num {
   width: 3.5rem; padding: 0.32rem 0.45rem; text-align: right;
-  font-family: 'Geist Mono', ui-monospace, monospace; font-size: 0.9rem; font-variant-numeric: tabular-nums; color: var(--chalk);
-  background: rgba(7, 10, 18, 0.6); border: 1px solid var(--line-strong); border-radius: 9px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.88rem; font-variant-numeric: tabular-nums; color: var(--chalk);
+  background: rgba(9, 10, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 9px;
   transition: border-color 160ms var(--ease-out), box-shadow 200ms var(--ease-out);
   -moz-appearance: textfield; appearance: textfield;
 }
 .num::-webkit-outer-spin-button, .num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .num:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(79, 216, 255, 0.22); }
 
-.range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 1.7rem; margin-top: 0.15rem; background: transparent; cursor: pointer; --fill: 50%; }
-.range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--cyan), var(--violet)) 0 / var(--fill) 100% no-repeat, rgba(154, 173, 255, 0.2); }
-.range::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(154, 173, 255, 0.2); }
-.range::-moz-range-progress { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--cyan), var(--violet)); }
-.range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.15rem; height: 1.15rem; margin-top: -0.5rem; border-radius: 50%; background: var(--chalk); border: 2px solid var(--cyan); box-shadow: 0 0 0 4px rgba(79, 216, 255, 0.14), 0 4px 10px rgba(0, 0, 0, 0.5); transition: transform 200ms var(--ease-out); }
-.range::-moz-range-thumb { width: 1.15rem; height: 1.15rem; border-radius: 50%; background: var(--chalk); border: 2px solid var(--cyan); box-shadow: 0 0 0 4px rgba(79, 216, 255, 0.14); transition: transform 200ms var(--ease-out); }
-.range:active::-webkit-slider-thumb { transform: scale(1.14); }
-.range:active::-moz-range-thumb { transform: scale(1.14); }
+.range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 1.8rem; margin-top: 0.1rem; background: transparent; cursor: pointer; --fill: 50%; }
+.range::-webkit-slider-runnable-track { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--cyan), var(--indigo) 60%, var(--violet)) 0 / var(--fill) 100% no-repeat, rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4); }
+.range::-moz-range-track { height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); }
+.range::-moz-range-progress { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--cyan), var(--indigo) 60%, var(--violet)); }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.3rem; height: 1.3rem; margin-top: -0.58rem; border-radius: 50%; background: radial-gradient(circle at 35% 28%, #ffffff, #c7d2fe 70%); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2), 0 6px 14px rgba(0, 0, 0, 0.55), 0 0 18px rgba(79, 216, 255, 0.35); transition: transform 0.5s var(--spring), box-shadow 0.3s var(--ease-out); }
+.range::-moz-range-thumb { width: 1.3rem; height: 1.3rem; border-radius: 50%; background: radial-gradient(circle at 35% 28%, #ffffff, #c7d2fe 70%); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2), 0 6px 14px rgba(0, 0, 0, 0.55), 0 0 18px rgba(79, 216, 255, 0.35); transition: transform 0.5s var(--spring), box-shadow 0.3s var(--ease-out); }
+.range:active::-webkit-slider-thumb { transform: scale(1.22); box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.25), 0 8px 18px rgba(0, 0, 0, 0.6), 0 0 26px rgba(79, 216, 255, 0.5); }
+.range:active::-moz-range-thumb { transform: scale(1.22); box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.25), 0 8px 18px rgba(0, 0, 0, 0.6), 0 0 26px rgba(79, 216, 255, 0.5); }
 .range:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 6px; }
 
 .lab-bottom { display: flex; flex-wrap: wrap; align-items: stretch; gap: 1rem; margin-top: 1.2rem; }
 .readouts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; flex: 1 1 17rem; }
 .readouts > div { padding: 0.6rem 0.75rem; border: 1px solid var(--line); border-radius: 12px; background: rgba(7, 10, 18, 0.5); min-width: 0; }
 .readouts dt { font-size: 0.74rem; color: var(--mist); letter-spacing: 0.01em; }
-.readouts dd { margin-top: 0.12rem; font-size: 1rem; font-variant-numeric: tabular-nums; color: var(--cyan); white-space: nowrap; }
+.readouts dd { margin-top: 0.12rem; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 1.02rem; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--cyan); text-shadow: 0 0 14px rgba(79, 216, 255, 0.55); white-space: nowrap; }
 .lab-actions { display: flex; align-items: center; gap: 0.6rem; }
 .lab-actions .btn { min-height: 2.75rem; padding: 0.55rem 1.3rem; }
 .lab-scale { margin-top: 0.75rem; font-size: 0.8rem; color: var(--mist); }
@@ -420,7 +425,7 @@ button.mm-node:disabled { cursor: default; color: var(--chalk); }
 .mm-root-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .mm-subject-node {
-  padding: 0.75rem 1.1rem; font-family: 'Sora', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent);
+  padding: 0.75rem 1.1rem; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent);
   border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: color-mix(in srgb, var(--accent) 10%, var(--glass));
 }
 button.mm-subject-node:disabled { color: var(--accent); }
@@ -431,7 +436,7 @@ button.mm-toggle:not(:disabled):hover { border-color: var(--accent); background:
 .mm-toggle[aria-expanded='true'] .mm-chev { transform: rotate(90deg); }
 .mm-count {
   min-width: 1.5rem; margin-left: 0.15rem; padding: 0.05rem 0.4rem; border-radius: 999px;
-  font-family: 'Geist Mono', monospace; font-size: 0.75rem; font-weight: 500; text-align: center; color: var(--mist); background: rgba(140, 215, 225, 0.1);
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500; text-align: center; color: var(--mist); background: rgba(140, 215, 225, 0.1);
 }
 
 .mm-leaf { max-width: 20rem; font-size: 0.9rem; border-color: color-mix(in srgb, var(--accent) 32%, transparent); }
@@ -445,7 +450,7 @@ button.mm-toggle:not(:disabled):hover { border-color: var(--accent); background:
 .mm-leaf-video:hover { border-color: var(--coral); background: color-mix(in srgb, var(--coral) 12%, var(--glass)); }
 .mm-leaf-video > .icon:first-child { color: var(--coral); }
 .mm-kind { padding: 0.05rem 0.45rem; border-radius: 999px; font-size: 0.72rem; color: var(--coral); border: 1px solid color-mix(in srgb, var(--coral) 50%, transparent); }
-.mm-lo { padding: 0.05rem 0.45rem; border-radius: 999px; font-family: 'Geist Mono', monospace; font-size: 0.72rem; color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent); }
+.mm-lo { padding: 0.05rem 0.45rem; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent); }
 
 .mm-tip { font-size: 0.85rem; line-height: 1.45; }
 .mm-tip-res { display: block; margin-top: 0.35rem; color: var(--mist); font-size: 0.8rem; }
@@ -561,7 +566,7 @@ button.mm-toggle:not(:disabled):hover { border-color: var(--accent); background:
 .pl-btn > .icon:first-child { color: var(--coral); }
 .pl-btn:hover { border-color: var(--coral); background: color-mix(in srgb, var(--coral) 14%, transparent); }
 .pl-name { flex: 1; min-width: 0; }
-.pl-lo { padding: 0.05rem 0.45rem; border-radius: 999px; font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent); }
+.pl-lo { padding: 0.05rem 0.45rem; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent); }
 .pl-all { display: inline-flex; align-items: center; align-self: flex-start; gap: 0.45rem; margin-top: 0.9rem; font-size: 0.92rem; color: var(--mist); border-radius: 6px; }
 .pl-all:hover { color: var(--coral); }
 .pl-empty { color: var(--mist); font-size: 0.95rem; }
@@ -587,7 +592,7 @@ button.mm-toggle:not(:disabled):hover { border-color: var(--accent); background:
 .yt-stat dt { color: var(--mist); font-size: 0.92rem; }
 .yt-stat dd { margin-top: 0.25rem; }
 .count {
-  display: block; font-family: 'Sora', system-ui, sans-serif; font-weight: 800;
+  display: block; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800;
   font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.05; font-variant-numeric: tabular-nums;
   background: linear-gradient(100deg, var(--cyan), var(--emerald)); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
@@ -631,3 +636,86 @@ button.mm-toggle:not(:disabled):hover { border-color: var(--accent); background:
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   .social:hover { transform: none; }
 }
+
+/* =========================================================
+   Luxury layer: headline gradients, badge, pointer spotlight, spring lift, shimmer
+   Rules here come last on purpose so they refine everything above.
+   ========================================================= */
+
+/* Headlines: white fading to slate, tight tracking */
+.section-title, .page-title, .block-title, .about-lead, .cta-band h2, .hero-sub, .steps h3, .about-card h3,
+.person h3, .social-name, .empty-title, .yt-stats h3, .drive-cta-title, .lab-title {
+  background: linear-gradient(180deg, #ffffff 20%, #94a3b8 135%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  letter-spacing: -0.025em;
+}
+
+/* Floating badge above the wordmark */
+.hero-badge {
+  display: flex; width: fit-content; align-items: center; gap: 0.55rem; margin: 0 0 1.5rem;
+  padding: 0.42rem 0.95rem 0.42rem 0.75rem; border-radius: 999px;
+  font-size: 0.8rem; font-weight: 500; letter-spacing: 0.015em; color: #cbd5e1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 28px -14px rgba(99, 102, 241, 0.55);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.hero-badge-star { font-size: 0.85rem; color: var(--cyan); text-shadow: 0 0 10px rgba(79, 216, 255, 0.85); }
+
+/* Pointer spotlight: a soft radial glow follows the cursor inside every glass surface.
+   It is one element moved with transform and faded with opacity, so it stays on the compositor. */
+.glass::after {
+  content: ''; position: absolute; left: 0; top: 0; z-index: -1; pointer-events: none;
+  width: 34rem; height: 34rem; margin: -17rem 0 0 -17rem; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(129, 140, 248, 0.22), rgba(79, 216, 255, 0.07) 55%, transparent);
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  opacity: 0; transition: opacity 0.4s var(--ease-out);
+}
+.glass { transition: border-color 0.3s var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .glass:hover { border-color: rgba(255, 255, 255, 0.15); }
+  .glass:hover::after { opacity: 1; }
+}
+
+/* Subject cards carry their own ambient tint */
+.subject-panel.glass {
+  background:
+    radial-gradient(70% 90% at 0% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.01) 42%),
+    var(--glass);
+}
+
+/* Spring lift: cards rise 4px, buttons and pills 2px, on a fast-in slow-settle curve */
+.subject-panel, .about-card, .steps li, .person, .social, .yt-stat {
+  transition: transform 0.3s var(--ease-spring), border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
+}
+.topic-links a, .mm-act, .pl-btn, .seg-btn, .tab, .chip {
+  transition: transform 0.3s var(--ease-spring), border-color 0.25s var(--ease-out), background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+}
+.btn { transition: transform 0.3s var(--ease-spring), background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), color 0.2s var(--ease-out); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .subject-panel:hover, .about-card:hover, .steps li:hover, .person:hover, .social:hover, .yt-stat:hover { transform: translateY(-4px); }
+  .topic-links a:hover, .mm-act:hover, .pl-btn:hover, .btn:hover { transform: translateY(-2px); }
+  .btn:active, .topic-links a:active, .mm-act:active, .pl-btn:active { transform: scale(0.97); }
+}
+
+/* Primary buttons: a band of light sweeps across on hover */
+.btn-primary {
+  background:
+    linear-gradient(105deg, transparent 36%, rgba(255, 255, 255, 0.6) 50%, transparent 64%) 170% 0 / 260% 100% no-repeat,
+    linear-gradient(120deg, var(--cyan), var(--violet));
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover {
+    background-position: -170% 0, 0 0;
+    transition: transform 0.3s var(--ease-spring), background-position 1s var(--ease-out), background-color 0.2s var(--ease-out);
+  }
+}
+
+/* Gradient text only paints inside its box, so give big headlines room for descenders
+   and pull the layout back with an equal negative margin. */
+.page-title, .section-title, .block-title, .about-lead, .cta-band h2, .hero-sub {
+  padding-bottom: 0.16em; margin-bottom: -0.16em;
+}
+.page-title { line-height: 1.08; }

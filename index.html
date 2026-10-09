@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&family=Geist:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300..800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
@@ -23,18 +23,18 @@
             neon: '#27e8ff',
             mint: '#3df5a8',
             chalk: '#e6f5f3',
-            mist: '#8aa6a6'
+            mist: '#a6a6a6'
           },
           fontFamily: {
-            display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-            body: ['Geist', 'system-ui', 'sans-serif'],
+            display: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            body: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
           }
         }
       }
     };
   </script>
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=9">
 </head>
 <body class="font-body antialiased">
 
@@ -104,6 +104,7 @@
     <!-- ============ HOME ============ -->
     <section data-view="home" aria-labelledby="home-title">
       <div id="hero" class="hero">
+        <canvas id="ascii-bg" class="ascii-bg" aria-hidden="true"></canvas>
         <div class="hero-inner mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="hero-copy">
             <p class="hero-badge"><span class="hero-badge-star" aria-hidden="true">&#10022;</span>Grade 10 &amp; 11 Interactive Platform</p>
@@ -429,10 +430,24 @@
     </div>
   </footer>
 
+  <!-- Fixed status bar: decorative, hidden from assistive tech -->
+  <div class="statusbar" aria-hidden="true">
+    <div class="sb-group">
+      <span>MATHRIX</span>
+      <span class="sb-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span>PAGE <span class="sb-page" id="sb-page">HOME</span></span>
+    </div>
+    <div class="sb-group">
+      <span class="sb-dots"><i></i><i></i><i></i></span>
+      <span class="sb-hide-sm">GRADE 10 / 11</span>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="js/config.js?v=6"></script>
-  <script src="js/study-data.js?v=6"></script>
-  <script src="js/hero3d.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/config.js?v=9"></script>
+  <script src="js/study-data.js?v=9"></script>
+  <script src="js/ascii-bg.js?v=9"></script>
+  <script src="js/hero3d.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>

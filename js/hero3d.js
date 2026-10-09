@@ -93,7 +93,7 @@
   var scene, camera, rig, ball, ghosts = [], arcLine, arcDots, apexMark, apexDrop, landMark, barrel, speedArrow;
   var glow, trail, trailGeo, trailAge, trailVel, trailBase, trailHead = 0, emitAcc = 0;
   var TRAIL_N = 260, TRAIL_LIFE = 1.1;
-  var CYAN = 0x4fd8ff, VIOLET = 0x9a8cff, AMBER = 0xffcf5c;
+  var CYAN = 0xffffff, VIOLET = 0xc4c4c4, AMBER = 0xffcf5c;
   var X0 = -6, LIFT = 0.3, BALL_R = 0.4, GHOSTS = 10, ARC_N = 140;
   var k = 0.1, kTarget = 0.1;          // scene units per metre
   var flying = false, landed = false, simT = 0, playRate = 1, arcDirty = true;
@@ -166,7 +166,7 @@
   }
 
   /* particle trail: additive points that shrink to black as they age */
-  var colA = new THREE.Color(0x4fd8ff), colB = new THREE.Color(0x9a8cff), colTmp = new THREE.Color();
+  var colA = new THREE.Color(0xffffff), colB = new THREE.Color(0xb0b0b0), colTmp = new THREE.Color();
   function emit(x, y, spread, speed) {
     var i = trailHead, a = Math.random() * Math.PI * 2, sp = Math.random() * speed;
     trailHead = (trailHead + 1) % TRAIL_N;

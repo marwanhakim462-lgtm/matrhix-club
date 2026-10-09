@@ -91,7 +91,7 @@
   }
 
   var scene, camera, rig, ball, ghosts = [], arcLine, arcDots, apexMark, apexDrop, landMark, barrel, speedArrow;
-  var CYAN = 0x27e8ff, MINT = 0x3df5a8, AMBER = 0xffcf5c;
+  var CYAN = 0x4fd8ff, VIOLET = 0x9a8cff, AMBER = 0xffcf5c;
   var X0 = -6, LIFT = 0.3, BALL_R = 0.4, GHOSTS = 10, ARC_N = 140;
   var k = 0.1, kTarget = 0.1;          // scene units per metre
   var flying = false, landed = false, simT = 0, playRate = 1, arcDirty = true;
@@ -148,7 +148,7 @@
     scene.add(rig);
 
     // ground grid, back wall grid and the x axis
-    rig.add(gridLines(8, 4, MINT, 0.2));
+    rig.add(gridLines(8, 4, VIOLET, 0.2));
     var wall = [], i;
     for (i = -8; i <= 8; i++) wall.push(i, 0, -4, i, 7, -4);
     for (i = 0; i <= 7; i++) wall.push(-8, i, -4, 8, i, -4);
@@ -157,7 +157,7 @@
     rig.add(new THREE.LineSegments(wg, lineMat(CYAN, 0.08)));
     var axis = new THREE.BufferGeometry();
     axis.setAttribute('position', new THREE.Float32BufferAttribute([-8, 0, 0, 8, 0, 0], 3));
-    rig.add(new THREE.Line(axis, lineMat(MINT, 0.55)));
+    rig.add(new THREE.Line(axis, lineMat(VIOLET, 0.55)));
 
     // launcher: base and barrel
     var base = new THREE.CylinderGeometry(0.34, 0.52, 0.34, 10);
@@ -203,15 +203,15 @@
     ring.push(-0.2, 0, 0, 0.2, 0, 0, 0, 0, -0.2, 0, 0, 0.2);
     var ringGeo = new THREE.BufferGeometry();
     ringGeo.setAttribute('position', new THREE.Float32BufferAttribute(ring, 3));
-    landMark = new THREE.LineSegments(ringGeo, lineMat(MINT, 0.95));
+    landMark = new THREE.LineSegments(ringGeo, lineMat(VIOLET, 0.95));
     rig.add(landMark);
 
     // the ball and its stroboscopic ghosts
     var geo = sphereGeometry(BALL_R, P.n);
-    ball = new THREE.LineSegments(geo, lineMat(MINT, 0.98));
+    ball = new THREE.LineSegments(geo, lineMat(VIOLET, 0.98));
     rig.add(ball);
     for (var g = 0; g < GHOSTS; g++) {
-      var gh = new THREE.LineSegments(geo, lineMat(MINT, 0.3));
+      var gh = new THREE.LineSegments(geo, lineMat(VIOLET, 0.3));
       gh.visible = false;
       rig.add(gh);
       ghosts.push(gh);
